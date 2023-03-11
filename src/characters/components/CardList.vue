@@ -1,37 +1,36 @@
 <script setup lang="ts">
-// import rickAndMortyApi from '@/api/rickAndMortyApi';
-// import type {Characters, Result} from '@/characters/interfaces/characters';
-// import { ref } from 'vue';
-// import { useCharacters } from '@/characters/composable/useCharacters';
-import { useQuery } from '@tanstack/vue-query';
-import type { Characters, Result } from '@/characters/interfaces/characters';
-import rickAndMortyApi from '@/api/rickAndMortyApi';
 import CharacterCard from '@/characters/components/CharacterCard.vue'
+import type {Result} from '@/characters/interfaces/characters';
+
+interface Props {
+    characters: Result[];
+}
+
+const props=defineProps<Props>();
 
 // const {isLoading, characters, hasError, errorMessage}=useCharacters();
-const getCharactersSlow=async():Promise<Result[]>=>{
-    return new Promise(resolve=>{
-        setTimeout(async()=>{
-            const {data}=await rickAndMortyApi.get<Characters>('/character');
-            resolve (data.results);
-        }, 1)
-    })
-    // const {data}=await rickAndMortyApi.get<Characters>('/character');
-    // return data.results;
-}
-const {isLoading, isError, data: characters, error}=useQuery(
-    ['characters'],
-    getCharactersSlow,
-    {
-        cacheTime: 1000*60,
-        refetchOnReconnect: 'always',
-    }
-);
+// const getCharactersSlow=async():Promise<Result[]>=>{
+//     return new Promise(resolve=>{
+//         setTimeout(async()=>{
+//             const {data}=await rickAndMortyApi.get<Characters>('/character');
+//             resolve (data.results);
+//         }, 1)
+//     })
+
+// }
+// const {isLoading, data: characters}=useQuery(
+//     ['characters'],
+//     getCharactersSlow,
+//     {
+//         cacheTime: 1000*60,
+//         refetchOnReconnect: 'always',
+//     }
+// );
 
 </script>
 
 <template>
-    <h1 v-if="isLoading">Loading...</h1>
+    <!-- <h1 v-if="isLoading">Loading...</h1> -->
     
     <div class="card-list">
         <!-- <li
@@ -40,7 +39,7 @@ const {isLoading, isError, data: characters, error}=useQuery(
             {{ name }}
         </li> -->
         <CharacterCard
-          v-for="character of characters"
+          v-for="character of props.characters"
           :key="character.id" 
           :character="character"/>
     </div>
